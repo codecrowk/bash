@@ -1,18 +1,24 @@
 @echo off
 title Apriendiendo de la Consolita
 :: Variables
-set infoAboutSystem=inventarioSistema.txt
+set infoAboutSystem=board\inventarioSistema.txt
+
+:: Crear arbol directorios
+set directorios=SO board NIC memoria disco pc 
+(for %%a in (%directorios%) do ( 
+   mkdir %%a 
+))
 
 :: Crear archivo hora y fecha
-:: No permite ejecutar ambos comandos = set timeHour=time /t && date /t
-date /t > time.txt
-time /t >> time.txt
+:: No permixte ejecutar ambos comandos = set timeHour=time /t && date /t
+date /t > board\time.txt
+time /t >> board\time.txt
 
 :: Current directory
-cd > working_directory.txt
+cd > so\working_directory.txt
 
 :: Generar archivo ipconfig
-ipconfig > dirIpLocal.txt
+ipconfig > NIC\dirIpLocal.txt
 
 :: Inventario del sistema
 systeminfo > %infoAboutSystem%
@@ -37,14 +43,12 @@ wmic logicaldisk get size, freespace, caption > disco_duro.txt
 echo Identificando estadisticas de red
 netstat -a > conexion.txt
 
-:: Sesiones 
-wmic USERACCOUNT get Caption, Name, Disabled, LocalAccount, Lockout, PasswordRequired > cuentas.txt
-wmic /node:127.0.0.1 computersystem get userName, DomainRole, AdminPasswordStatus, Status, SystemType, Model, Domain, Description, CreationClassName >> cuentas.txt
+:: Sesiones
+query session > cuentas.txt
+:: wmic USERACCOUNT get Caption, Name, Disabled, LocalAccount, Lockout, PasswordRequired > cuentas.txt
+:: wmic /node:127.0.0.1 computersystem get userName, DomainRole, AdminPasswordStatus, Status, SystemType, Model, Domain, Description, CreationClassName >> cuentas.txt
 
-set directorios=SO board NIC memoria disco pc 
-(for %%a in (%directorios%) do ( 
-   echo %%a 
-))
+
 
 pause
 exit
