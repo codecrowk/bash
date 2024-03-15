@@ -9,44 +9,52 @@ set directorios=SO board NIC memoria disco pc
    mkdir %%a 
 ))
 
-:: Crear archivo hora y fecha
+:: 1. Crear archivo hora y fecha
 :: No permixte ejecutar ambos comandos = set timeHour=time /t && date /t
 date /t > board\time.txt
 time /t >> board\time.txt
 
-:: Current directory
+:8.: Current directory
 cd > so\working_directory.txt
 
-:: Generar archivo ipconfig
+::3. Generar archivo ipconfig
 ipconfig > NIC\dirIpLocal.txt
 
-:: Inventario del sistema
+::10. Inventario del sistema
 systeminfo > %infoAboutSystem%
 
-:: Generar archivo memoria
-find "Cantidad total de memoria" %infoAboutSystem% > memoria.txt
-findstr "Memoria virtual" %infoAboutSystem% >> memoria.txt
+::5. Generar archivo memoria
+find "Cantidad total de memoria" %infoAboutSystem% > memoria\memoria.txt
+findstr "Memoria virtual" %infoAboutSystem% >> memoria\memoria.txt
 
-:: Listado susdirectorios
+:: 7. Nombre maquina
+whoami > pc\nombre.txt
+
+::9. Listado susdirectorios
 cls
 echo Esto puede tardar un poco...
 echo Haciendo un analisis de carpetas
-tree C:/ > carpetas.txt
+tree C:/ > so\carpetas.txt
 
-:: Procesos activos
+::11. Procesos activos
 tasklist > procesos.txt
+:: mover Archivo
+move .\procesos.txt .\so
 
-:: Informacion sobre el disco
-wmic logicaldisk get size, freespace, caption > disco_duro.txt
 
-:: Estadisticas de conexion
+::6. Informacion sobre el disco
+wmic logicaldisk get size, freespace, caption > disco\disco_duro.txt
+
+::4. Estadisticas de conexion
 echo Identificando estadisticas de red
-netstat -a > conexion.txt
+netstat -a > NIC\conexion.txt
 
-:: Sesiones
-query session > cuentas.txt
-:: wmic USERACCOUNT get Caption, Name, Disabled, LocalAccount, Lockout, PasswordRequired > cuentas.txt
-:: wmic /node:127.0.0.1 computersystem get userName, DomainRole, AdminPasswordStatus, Status, SystemType, Model, Domain, Description, CreationClassName >> cuentas.txt
+::2.  Sesiones
+set directorioSesiones=so\sesiones.txt
+query session > %directorioSesiones%
+:: wmic USERACCOUNT get Caption, Name, Disabled, LocalAccount, Lockout, PasswordRequired > %directorioSesiones%
+:: wmic /node:127.0.0.1 computersystem get userName, DomainRole, AdminPasswordStatus, Status, SystemType, Model, Domain, Description, CreationClassName >> %directorioSesiones%
+
 
 
 
